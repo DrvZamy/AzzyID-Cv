@@ -28,7 +28,7 @@
   <main id="top" class="shell page">
     <section class="hero">
       <div class="hero-copy">
-        <span class="eyebrow">PACK CONVERTER V2</span>
+        <span class="eyebrow">PACK CONVERTER V2.1</span>
         <h1>Ubah pack Java menjadi <span>Bedrock-ready.</span></h1>
         <p>Upload ZIP ItemsAdder atau generated resource pack. Converter memindai item, model, rank PNG/font glyph, sound, animasi texture, dan berkas Blockbench tanpa mengunggah file ke server.</p>
         <div class="hero-tags">
@@ -36,9 +36,9 @@
         </div>
       </div>
       <aside class="hero-card">
-        <span class="hero-card-label">Yang diperbaiki di v2</span>
-        <strong>Ikon rank di buku/chat tidak lagi hanya kotak putih.</strong>
-        <p>Java bitmap font dibangun ulang menjadi halaman glyph Bedrock <code>font/glyph_XX.png</code>.</p>
+        <span class="hero-card-label">Fix utama di v2.1</span>
+        <strong>Rank lebar sekarang dinormalisasi agar tidak mudah turun baris.</strong>
+        <p>Ukuran Java <code>height/ascent</code> kini dipakai, dengan mode kompatibilitas rank Bedrock.</p>
       </aside>
     </section>
 
@@ -65,6 +65,7 @@
         <div class="option-grid">
           <label class="option"><input id="optItems" type="checkbox" checked><span class="check"></span><span><strong>Custom items</strong><small>Texture + mapping Geyser v2</small></span></label>
           <label class="option"><input id="optFonts" type="checkbox" checked><span class="check"></span><span><strong>Rank PNG & glyph</strong><small>Java bitmap font → Bedrock glyph pages</small></span></label>
+          <label class="option featured-option"><input id="optCompactFonts" type="checkbox" checked><span class="check"></span><span><strong>Compat rank Bedrock</strong><small>Kecilkan glyph lebar ke tinggi 9px agar preview/prefix tidak wrap</small></span></label>
           <label class="option"><input id="optSounds" type="checkbox" checked><span class="check"></span><span><strong>Custom sounds</strong><small>OGG + sound_definitions.json</small></span></label>
           <label class="option"><input id="optModels" type="checkbox" checked><span class="check"></span><span><strong>Model 3D dasar</strong><small>Cuboid Java model → geometry + attachable</small></span></label>
           <label class="option"><input id="optBbmodel" type="checkbox" checked><span class="check"></span><span><strong>.bbmodel statis</strong><small>Export geometry dasar dan texture embedded</small></span></label>
@@ -128,13 +129,13 @@
     </section>
 
     <section class="notes-grid">
-      <article><span>01</span><h3>Rank PNG & font</h3><p>Upload generated pack bila ItemsAdder memilih karakter glyph secara otomatis. File YAML tanpa properti <code>symbol</code> tidak menyimpan kode Unicode-nya.</p></article>
+      <article><span>01</span><h3>Rank PNG & font</h3><p>Mode Compat Rank aktif secara default dan memakai tinggi/ascent font Java. Upload generated pack bila ItemsAdder memilih karakter glyph secara otomatis. File YAML tanpa properti <code>symbol</code> tidak menyimpan kode Unicode-nya.</p></article>
       <article><span>02</span><h3>Model kompleks</h3><p>Model kubus dasar dapat dibuat menjadi attachable. Animasi, banyak texture, shader, item display, dan model plugin lain tetap dapat membutuhkan penyesuaian.</p></article>
       <article><span>03</span><h3>Sound</h3><p>File OGG disalin dan event Java diterjemahkan. Gunakan OGG Vorbis; codec yang tidak didukung Bedrock akan ditandai untuk dites manual.</p></article>
     </section>
   </main>
 
-  <footer class="shell footer"><span>Azy Pack Bridge v2.0</span><span>Semua pemrosesan berjalan di perangkat kamu.</span></footer>
+  <footer class="shell footer"><span>Azy Pack Bridge v2.1</span><span>Semua pemrosesan berjalan di perangkat kamu.</span></footer>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
   <script src="vendor/jszip.min.js"></script>

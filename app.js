@@ -20,7 +20,7 @@
   const el = {
     fileInput: $('#fileInput'), dropzone: $('#dropzone'), fileBadge: $('#fileBadge'),
     packName: $('#packName'), fallbackNamespace: $('#fallbackNamespace'),
-    optItems: $('#optItems'), optFonts: $('#optFonts'), optSounds: $('#optSounds'),
+    optItems: $('#optItems'), optFonts: $('#optFonts'), optCompactFonts: $('#optCompactFonts'), optSounds: $('#optSounds'),
     optModels: $('#optModels'), optBbmodel: $('#optBbmodel'), optFlipbooks: $('#optFlipbooks'),
     scanBtn: $('#scanBtn'), downloadBtn: $('#downloadBtn'), analysisState: $('#analysisState'), healthBadge: $('#healthBadge'),
     progressText: $('#progressText'), progressPct: $('#progressPct'), progressBar: $('#progressBar'),
@@ -1003,6 +1003,31 @@
     return canvasToBytes(canvas);
   }
 
+  function glyphRenderMetrics(record) {
+    const sourceW = Math.max(1, Number(record.sw || 1));
+    const sourceH = Math.max(1, Number(record.sh || 1));
+    const declaredHeight = Math.max(1, Math.min(256, Math.round(Number(record.desiredHeight || sourceH))));
+    const aspect = sourceW / sourceH;
+    const compactWideGlyph = Boolean(el.optCompactFonts?.checked && aspect >= 2.5);
+
+    // Java bitmap providers store the intended rendered height separately from
+    // the source PNG resolution. The previous converter ignored it and used
+    // the raw 80x16 rank size, producing oversized Bedrock advance widths.
+    const renderH = compactWideGlyph ? Math.min(9, declaredHeight) : declaredHeight;
+    const renderW = Math.max(1, Math.min(256, Math.round(sourceW * (renderH / sourceH))));
+
+    const declaredAscent = Number.isFinite(Number(record.ascent)) ? Number(record.ascent) : declaredHeight;
+    let scaledAscent = Math.round(declaredAscent * (renderH / declaredHeight));
+    scaledAscent = Math.max(0, Math.min(renderH, scaledAscent));
+    let baselinePad = Math.max(0, renderH - scaledAscent);
+
+    // ItemsAdder's recommended rank metrics are height 9 / ascent 8.
+    // Keep one transparent pixel below compact rank glyphs for a stable baseline.
+    if (compactWideGlyph) baselinePad = Math.min(1, Math.max(0, renderH - 1));
+
+    return { renderW, renderH, baselinePad, compactWideGlyph, declaredHeight, aspect };
+  }
+
   async function buildGlyphPages(packZip) {
     const glyphsByPage = new Map();
     for (const font of state.fonts) {
@@ -1020,7 +1045,7 @@
           const record = {
             codepoint: glyph.codepoint, image,
             sx: glyph.col * sourceCellW, sy: glyph.row * sourceCellH, sw: sourceCellW, sh: sourceCellH,
-            desiredHeight: Number(font.height || sourceCellH), ascent: Number(font.ascent || font.height || sourceCellH), source: font.source
+            desiredHeight: Number(font.height || sourceCellH), ascent: Number(font.ascent ?? font.height ?? sourceCellH), source: font.source
           };
           (glyphsByPage.get(page) || glyphsByPage.set(page, []).get(page)).push(record);
         }
@@ -1028,7 +1053,7 @@
         try {
           const image = await loadEntryImage(font.texturePath);
           const page = font.codepoint >> 8;
-          const record = { codepoint: font.codepoint, image, sx: 0, sy: 0, sw: image.width, sh: image.height, desiredHeight: Number(font.height || image.height), ascent: Number(font.ascent || font.height || image.height), source: font.source };
+          const record = { codepoint: font.codepoint, image, sx: 0, sy: 0, sw: image.width, sh: image.height, desiredHeight: Number(font.height || image.height), ascent: Number(font.ascent ?? font.height ?? image.height), source: font.source };
           (glyphsByPage.get(page) || glyphsByPage.set(page, []).get(page)).push(record);
         } catch { /* reported during scan */ }
       }
@@ -1038,24 +1063,25 @@
     for (const [page, recordsRaw] of glyphsByPage) {
       // Last provider wins, matching Java font provider override behavior closely enough for generated packs.
       const byCodepoint = new Map(); recordsRaw.forEach(r => byCodepoint.set(r.codepoint, r));
-      const records = [...byCodepoint.values()];
+      const records = [...byCodepoint.values()].map(r => ({ ...r, metrics: glyphRenderMetrics(r) }));
       let cellSize = 16;
-      for (const r of records) cellSize = Math.max(cellSize, r.sw, r.sh);
+      for (const r of records) cellSize = Math.max(cellSize, r.metrics.renderW, r.metrics.renderH + r.metrics.baselinePad);
       cellSize = Math.min(256, Math.ceil(cellSize));
       const canvas = document.createElement('canvas'); canvas.width = canvas.height = cellSize * 16;
       const ctx = canvas.getContext('2d'); ctx.imageSmoothingEnabled = false; ctx.clearRect(0, 0, canvas.width, canvas.height);
+      let compacted = 0;
       for (const r of records) {
         const low = r.codepoint & 0xFF, col = low & 15, row = low >> 4;
-        const scale = Math.min(1, cellSize / Math.max(r.sw, r.sh));
-        const dw = Math.max(1, Math.round(r.sw * scale)), dh = Math.max(1, Math.round(r.sh * scale));
+        const { renderW: dw, renderH: dh, baselinePad, compactWideGlyph } = r.metrics;
         const dx = col * cellSize;
-        const dy = row * cellSize + Math.max(0, cellSize - dh);
+        const dy = row * cellSize + Math.max(0, cellSize - dh - baselinePad);
         ctx.drawImage(r.image, r.sx, r.sy, r.sw, r.sh, dx, dy, dw, dh);
+        if (compactWideGlyph) compacted++;
       }
       const hex = page.toString(16).toUpperCase().padStart(2, '0');
       const target = `font/glyph_${hex}.png`;
       packZip.file(target, await canvasToBytes(canvas));
-      outputs.push({ page: hex, target, glyphs: records.length, cell_size: cellSize });
+      outputs.push({ page: hex, target, glyphs: records.length, cell_size: cellSize, compacted_wide_glyphs: compacted });
     }
     return outputs;
   }
@@ -1230,7 +1256,7 @@
       pack_name: packName,
       summary: {
         items_found: state.items.length, item_textures_exported: exportItems.length, geyser_mappings: mappingCount,
-        glyph_pages: glyphPages, sound_events: soundOutput.events.length, sound_files: soundOutput.copied,
+        glyph_pages: glyphPages, compact_rank_mode: Boolean(el.optCompactFonts?.checked), sound_events: soundOutput.events.length, sound_files: soundOutput.copied,
         model_exports: modelOutput.length, flipbooks: flipbooks.length,
         ready: allAssets().filter(a => a.status === 'ready').length,
         review: allAssets().filter(a => a.status === 'review').length,
@@ -1240,6 +1266,7 @@
         'Tidak ada converter universal yang dapat menjamin 100% identik antara renderer Java dan Bedrock.',
         'Model cuboid diekspor sebagai attachable dasar; animasi, shader, display transform, emissive layer, banyak material, furniture/entity mechanics, dan model plugin khusus dapat membutuhkan edit manual.',
         'Font image tanpa symbol/codepoint memerlukan generated Java resource pack agar kode glyph dapat diketahui.',
+        'Mode Compat Rank menormalkan glyph lebar ke tinggi maksimal 9px untuk mengurangi wrap pada UI Bedrock.',
         'Animated item texture dan custom sound harus diuji pada versi Bedrock/Geyser target.'
       ],
       assets: allAssets().map(safeReportAsset),

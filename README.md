@@ -1,35 +1,32 @@
-# Azy Pack Bridge v2
+# Azy Pack Bridge v2.1
 
-Website statis untuk memindai dan mengonversi aset resource pack ItemsAdder Java menjadi bundle Bedrock + Geyser di browser.
+Website statis untuk memindai dan mengonversi aset resource pack ItemsAdder Java menjadi bundle Bedrock + Geyser langsung di browser.
+
+## Perbaikan v2.1
+
+- Memakai `height` dan `ascent` asli dari provider bitmap Java ketika membuat `font/glyph_XX.png`.
+- Mode **Compat rank Bedrock** aktif secara default.
+- Glyph lebar seperti rank/prefix dinormalisasi ke tinggi maksimal 9px agar advance width lebih kecil dan preview buku tidak mudah turun baris.
+- Menyisakan baseline 1px untuk alignment rank yang lebih stabil.
+- Laporan konversi mencatat berapa glyph lebar yang dikompakkan.
 
 ## Menjalankan
 
 1. Extract folder ini.
 2. Buka `index.html`, atau upload seluruh isi folder ke Netlify.
 3. Upload ZIP folder `ItemsAdder/contents` atau generated Java resource pack hasil `/iazip`.
-4. Tekan **Scan pack**, periksa status aset, lalu **Download bundle ZIP**.
+4. Biarkan **Compat rank Bedrock** aktif.
+5. Tekan **Scan pack**, lalu **Download bundle ZIP**.
 
-Tidak ada backend dan file pack tidak dikirim ke server. Library ZIP sudah disertakan secara lokal. Parser YAML memakai js-yaml dari CDN dan memiliki parser fallback untuk konfigurasi umum saat CDN tidak tersedia.
+## Catatan rank
+
+Untuk rank ItemsAdder tanpa properti `symbol`, gunakan generated resource pack hasil `/iazip`. File source `contents` saja tidak menyimpan codepoint otomatis yang dipilih ItemsAdder.
+
+Rank yang sangat lebar masih dapat wrap pada buku Bedrock karena lebar halaman dan metrik font Java/Bedrock berbeda. Mode kompatibilitas mengurangi masalah ini tanpa membuang texture.
 
 ## Output
 
 - `<pack>.mcpack` — Bedrock Resource Pack.
-- `geyser/custom_mappings/<pack>_items.json` — mapping custom item format v2.
-- `conversion-report.json` — daftar aset, hasil, dan keterbatasan.
+- `geyser/custom_mappings/<pack>_items.json` — mapping custom item Geyser v2.
+- `conversion-report.json` — daftar aset dan hasil konversi.
 - `INSTALL.txt` — petunjuk pemasangan.
-
-## Dukungan v2
-
-- Item texture 2D dari YAML ItemsAdder dan generated resource pack.
-- Legacy CustomModelData dan modern Java item definitions.
-- Java bitmap font menjadi `font/glyph_XX.png` untuk rank PNG/emoji di chat, buku, dan UI berbasis font.
-- Custom OGG + `sounds/sound_definitions.json`.
-- Model cuboid Java menjadi geometry + attachable dasar.
-- `.bbmodel` statis menjadi geometry/template manual dan mengekstrak texture embedded.
-- `.png.mcmeta` menjadi flipbook Bedrock ketika texture dapat dihubungkan ke item.
-
-## Batasan penting
-
-Java Edition dan Bedrock Edition memakai renderer, model, font, audio event, dan animasi yang berbeda. Converter tidak dapat menjamin semua pack tampil 100% identik. Model dengan bone/animasi rumit, shader/emissive, furniture/entity mechanics, display transform khusus, item display, atau format plugin lain dapat membutuhkan penyuntingan manual atau pipeline khusus.
-
-Untuk rank PNG yang simbolnya dibuat otomatis oleh ItemsAdder, gunakan generated pack hasil `/iazip`. YAML tanpa `symbol` tidak menyimpan codepoint yang dipilih ItemsAdder.
