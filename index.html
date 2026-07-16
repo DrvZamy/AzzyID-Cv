@@ -1,167 +1,143 @@
 <!doctype html>
-<html lang="id">
+<html lang="id" data-theme="dark">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#0b1020">
-  <title>Azy IA → Bedrock Converter</title>
-  <meta name="description" content="Converter ItemsAdder Java resource pack ke Bedrock resource pack + Geyser custom mappings.">
-  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#090d18">
+  <title>Azy Pack Bridge — ItemsAdder ke Bedrock</title>
+  <meta name="description" content="Converter resource pack ItemsAdder Java ke Bedrock + Geyser langsung di browser.">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="ambient ambient-a"></div>
-  <div class="ambient ambient-b"></div>
+  <div class="noise" aria-hidden="true"></div>
+  <div class="orb orb-a" aria-hidden="true"></div>
+  <div class="orb orb-b" aria-hidden="true"></div>
 
   <header class="topbar shell">
-    <a class="brand" href="#" aria-label="Azy Converter">
-      <span class="brand-mark">A</span>
-      <span>
-        <strong>Azy Converter</strong>
-        <small>ItemsAdder → Bedrock</small>
-      </span>
+    <a class="brand" href="#top" aria-label="Azy Pack Bridge">
+      <span class="brand-logo">A</span>
+      <span><strong>Azy Pack Bridge</strong><small>ItemsAdder → Bedrock + Geyser</small></span>
     </a>
     <div class="top-actions">
-      <span class="status-pill"><span class="status-dot"></span> Client-side</span>
+      <span class="engine-badge"><i></i> Local browser engine</span>
       <button id="themeBtn" class="icon-btn" type="button" aria-label="Ganti tema">☾</button>
     </div>
   </header>
 
-  <main class="shell page">
+  <main id="top" class="shell page">
     <section class="hero">
-      <div class="eyebrow">MINECRAFT PACK TOOLKIT</div>
-      <h1>Convert ItemsAdder pack<br><span>ke Bedrock + Geyser.</span></h1>
-      <p>Upload ZIP ItemsAdder <code>contents</code> atau generated Java resource pack, scan item dan texture, lalu download bundle siap dipasang ke Geyser. Semua proses berjalan di browser.</p>
-      <div class="hero-badges">
-        <span>✓ Modern <code>graphics</code></span>
-        <span>✓ Legacy <code>resource</code></span>
-        <span>✓ Geyser mappings v2</span>
+      <div class="hero-copy">
+        <span class="eyebrow">PACK CONVERTER V2</span>
+        <h1>Ubah pack Java menjadi <span>Bedrock-ready.</span></h1>
+        <p>Upload ZIP ItemsAdder atau generated resource pack. Converter memindai item, model, rank PNG/font glyph, sound, animasi texture, dan berkas Blockbench tanpa mengunggah file ke server.</p>
+        <div class="hero-tags">
+          <span>Item 2D</span><span>Font glyph / rank PNG</span><span>Sound OGG</span><span>Java model 3D</span><span>.bbmodel statis</span>
+        </div>
       </div>
+      <aside class="hero-card">
+        <span class="hero-card-label">Yang diperbaiki di v2</span>
+        <strong>Ikon rank di buku/chat tidak lagi hanya kotak putih.</strong>
+        <p>Java bitmap font dibangun ulang menjadi halaman glyph Bedrock <code>font/glyph_XX.png</code>.</p>
+      </aside>
     </section>
 
-    <section class="workspace grid-2">
-      <article class="panel upload-panel">
-        <div class="panel-head">
-          <div>
-            <span class="step">01</span>
-            <h2>Upload pack</h2>
-          </div>
-          <span id="fileBadge" class="mini-badge">Belum ada file</span>
+    <section class="workspace">
+      <div class="panel upload-panel">
+        <div class="panel-title-row">
+          <div><span class="step">01</span><div><h2>Upload & konfigurasi</h2><p>Pilih ZIP pack yang ingin dikonversi.</p></div></div>
+          <span id="fileBadge" class="badge muted-badge">Belum ada file</span>
         </div>
 
         <label id="dropzone" class="dropzone" for="fileInput">
           <input id="fileInput" type="file" accept=".zip,application/zip" hidden>
-          <div class="upload-icon">⇧</div>
-          <strong>Drop ZIP ItemsAdder di sini</strong>
-          <span>atau klik untuk memilih file</span>
-          <small>Mendukung <code>ItemsAdder/contents</code> dan ZIP resource pack hasil generate <code>/iazip</code>.</small>
+          <span class="drop-icon">⇧</span>
+          <strong>Taruh ZIP ItemsAdder di sini</strong>
+          <span>atau sentuh untuk memilih file</span>
+          <small>Mendukung <code>ItemsAdder/contents</code> dan hasil <code>/iazip</code>.</small>
         </label>
 
         <div class="form-grid">
-          <label>
-            <span>Nama pack</span>
-            <input id="packName" value="MineFiveID Bedrock Pack" maxlength="64">
-          </label>
-          <label>
-            <span>Fallback namespace</span>
-            <input id="fallbackNamespace" value="minefiveid" maxlength="32" pattern="[a-z0-9_.-]+">
-          </label>
+          <label><span>Nama pack</span><input id="packName" value="Azy Converted Pack" maxlength="80"></label>
+          <label><span>Fallback namespace</span><input id="fallbackNamespace" value="azypack" maxlength="32" spellcheck="false"></label>
         </div>
 
-        <div class="toggle-row">
-          <div>
-            <strong>Generate modern mappings</strong>
-            <span>Gunakan <code>namespace:item_id</code> untuk item berbasis <code>graphics</code>.</span>
-          </div>
-          <label class="switch">
-            <input id="modernMappings" type="checkbox" checked>
-            <span></span>
-          </label>
+        <div class="option-grid">
+          <label class="option"><input id="optItems" type="checkbox" checked><span class="check"></span><span><strong>Custom items</strong><small>Texture + mapping Geyser v2</small></span></label>
+          <label class="option"><input id="optFonts" type="checkbox" checked><span class="check"></span><span><strong>Rank PNG & glyph</strong><small>Java bitmap font → Bedrock glyph pages</small></span></label>
+          <label class="option"><input id="optSounds" type="checkbox" checked><span class="check"></span><span><strong>Custom sounds</strong><small>OGG + sound_definitions.json</small></span></label>
+          <label class="option"><input id="optModels" type="checkbox" checked><span class="check"></span><span><strong>Model 3D dasar</strong><small>Cuboid Java model → geometry + attachable</small></span></label>
+          <label class="option"><input id="optBbmodel" type="checkbox" checked><span class="check"></span><span><strong>.bbmodel statis</strong><small>Export geometry dasar dan texture embedded</small></span></label>
+          <label class="option"><input id="optFlipbooks" type="checkbox" checked><span class="check"></span><span><strong>Animated texture</strong><small>.png.mcmeta → flipbook_textures.json</small></span></label>
         </div>
 
-        <button id="scanBtn" class="primary-btn" type="button" disabled>
-          <span>Scan Pack</span>
-          <b>→</b>
-        </button>
-      </article>
+        <button id="scanBtn" class="primary-btn" type="button" disabled><span>Scan pack</span><b>→</b></button>
+      </div>
 
-      <article class="panel stats-panel">
-        <div class="panel-head">
-          <div>
-            <span class="step">02</span>
-            <h2>Pack analysis</h2>
-          </div>
-          <span id="analysisState" class="mini-badge neutral">Menunggu</span>
+      <div class="panel overview-panel">
+        <div class="panel-title-row compact-row">
+          <div><span class="step">02</span><div><h2>Analisis pack</h2><p id="analysisState">Menunggu file</p></div></div>
+          <span id="healthBadge" class="badge muted-badge">Idle</span>
         </div>
 
         <div class="stats-grid">
-          <div class="stat"><span>Items</span><strong id="statItems">0</strong></div>
-          <div class="stat"><span>Textures</span><strong id="statTextures">0</strong></div>
-          <div class="stat"><span>Ready</span><strong id="statReady">0</strong></div>
-          <div class="stat"><span>Review</span><strong id="statReview">0</strong></div>
+          <article><span>Items</span><strong id="statItems">0</strong><small>mapping item</small></article>
+          <article><span>Glyphs</span><strong id="statGlyphs">0</strong><small>rank / emoji</small></article>
+          <article><span>Sounds</span><strong id="statSounds">0</strong><small>event audio</small></article>
+          <article><span>Models</span><strong id="statModels">0</strong><small>3D + bbmodel</small></article>
         </div>
 
-        <div class="progress-wrap">
-          <div class="progress-meta"><span id="progressText">Belum ada proses</span><span id="progressPct">0%</span></div>
+        <div class="progress-block">
+          <div><span id="progressText">Belum dimulai</span><strong id="progressPct">0%</strong></div>
           <div class="progress"><i id="progressBar"></i></div>
         </div>
 
-        <div class="output-list">
-          <div><span class="output-icon">▣</span><div><strong>Bedrock Resource Pack</strong><small><code>.mcpack</code> siap ke folder Geyser <code>packs</code></small></div></div>
-          <div><span class="output-icon">⌘</span><div><strong>Geyser Mapping</strong><small>Format v2 untuk <code>custom_mappings</code></small></div></div>
-          <div><span class="output-icon">✓</span><div><strong>Conversion Report</strong><small>Detail item sukses, warning, dan unsupported</small></div></div>
+        <div class="quality-list">
+          <div><span class="quality-dot ok"></span><span><strong id="countReady">0</strong> siap diekspor</span></div>
+          <div><span class="quality-dot warn"></span><span><strong id="countReview">0</strong> perlu dicek</span></div>
+          <div><span class="quality-dot bad"></span><span><strong id="countUnsupported">0</strong> tidak bisa dipetakan</span></div>
         </div>
-      </article>
+
+        <button id="downloadBtn" class="download-btn" type="button" disabled>
+          <span><strong>Download bundle ZIP</strong><small>.mcpack + mapping + report</small></span><b>↓</b>
+        </button>
+      </div>
     </section>
 
     <section id="resultsPanel" class="panel results-panel hidden">
-      <div class="panel-head results-head">
-        <div>
-          <span class="step">03</span>
-          <h2>Conversion preview</h2>
-        </div>
-        <div class="result-actions">
-          <button id="downloadBtn" class="primary-btn compact" type="button" disabled>Convert & Download</button>
-        </div>
+      <div class="results-head">
+        <div><span class="step">03</span><div><h2>Hasil pemindaian</h2><p>Klik tab untuk melihat aset yang terdeteksi dan catatan konversi.</p></div></div>
       </div>
 
-      <div class="filters">
-        <button class="filter active" data-filter="all">Semua <span id="countAll">0</span></button>
-        <button class="filter" data-filter="ready">Ready <span id="countReady">0</span></button>
-        <button class="filter" data-filter="review">Review <span id="countReview">0</span></button>
-        <button class="filter" data-filter="unsupported">Unsupported <span id="countUnsupported">0</span></button>
-        <input id="searchInput" type="search" placeholder="Cari item...">
+      <div class="toolbar">
+        <div class="tabs" role="tablist">
+          <button class="tab active" data-tab="items" type="button">Items <span id="tabCountItems">0</span></button>
+          <button class="tab" data-tab="fonts" type="button">Glyphs <span id="tabCountFonts">0</span></button>
+          <button class="tab" data-tab="sounds" type="button">Sounds <span id="tabCountSounds">0</span></button>
+          <button class="tab" data-tab="models" type="button">Models <span id="tabCountModels">0</span></button>
+        </div>
+        <input id="searchInput" type="search" placeholder="Cari aset..." autocomplete="off">
       </div>
 
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Item</th><th>Base</th><th>Mode</th><th>Texture</th><th>Status</th></tr></thead>
+          <thead><tr><th>Aset</th><th>Tipe / sumber</th><th>Target output</th><th>Status</th><th>Catatan</th></tr></thead>
           <tbody id="resultRows"></tbody>
         </table>
       </div>
     </section>
 
-    <section class="info-grid">
-      <article class="info-card">
-        <span>01</span><h3>Upload</h3><p>ZIP boleh berupa folder <code>contents</code> atau generated Java resource pack yang berisi folder <code>assets</code>.</p>
-      </article>
-      <article class="info-card">
-        <span>02</span><h3>Convert</h3><p>Item 2D dikonversi otomatis. Model 3D Java dipakai sebagai sumber icon bila memungkinkan dan ditandai untuk review.</p>
-      </article>
-      <article class="info-card">
-        <span>03</span><h3>Install</h3><p>Masukkan <code>.mcpack</code> ke <code>Geyser/packs</code> dan file mapping JSON ke <code>Geyser/custom_mappings</code>.</p>
-      </article>
+    <section class="notes-grid">
+      <article><span>01</span><h3>Rank PNG & font</h3><p>Upload generated pack bila ItemsAdder memilih karakter glyph secara otomatis. File YAML tanpa properti <code>symbol</code> tidak menyimpan kode Unicode-nya.</p></article>
+      <article><span>02</span><h3>Model kompleks</h3><p>Model kubus dasar dapat dibuat menjadi attachable. Animasi, banyak texture, shader, item display, dan model plugin lain tetap dapat membutuhkan penyesuaian.</p></article>
+      <article><span>03</span><h3>Sound</h3><p>File OGG disalin dan event Java diterjemahkan. Gunakan OGG Vorbis; codec yang tidak didukung Bedrock akan ditandai untuk dites manual.</p></article>
     </section>
   </main>
 
-  <footer class="shell footer">
-    <span>Azy IA → Bedrock Converter</span>
-    <span>Files are processed locally in your browser.</span>
-  </footer>
-
+  <footer class="shell footer"><span>Azy Pack Bridge v2.0</span><span>Semua pemrosesan berjalan di perangkat kamu.</span></footer>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+  <script src="vendor/jszip.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
   <script src="app.js"></script>
 </body>
