@@ -5,5 +5,15 @@
   for = "/*"
   [headers.values]
     X-Content-Type-Options = "nosniff"
-    Referrer-Policy = "strict-origin-when-cross-origin"
-    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+    X-Frame-Options = "DENY"
+    Referrer-Policy = "no-referrer"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=(), usb=()"
+    Cross-Origin-Opener-Policy = "same-origin"
+    Cross-Origin-Resource-Policy = "same-origin"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' blob: https://cdn.jsdelivr.net; style-src 'self'; img-src 'self' data: blob:; connect-src 'self' https://cdn.jsdelivr.net; font-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'"
+    X-Robots-Tag = "noindex, nofollow, noarchive, nosnippet"
+
+[[headers]]
+  for = "/*.js"
+  [headers.values]
+    Cache-Control = "no-cache, must-revalidate"

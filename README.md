@@ -1,32 +1,31 @@
-# Azy Pack Bridge v2.1
+# Azy Pack Bridge v2.3
 
-Website statis untuk memindai dan mengonversi aset resource pack ItemsAdder Java menjadi bundle Bedrock + Geyser langsung di browser.
+Website statis untuk mengonversi resource pack ItemsAdder Java menjadi bundle Bedrock + Geyser langsung di browser.
 
-## Perbaikan v2.1
+## Perbaikan rank v2.3
 
-- Memakai `height` dan `ascent` asli dari provider bitmap Java ketika membuat `font/glyph_XX.png`.
-- Mode **Compat rank Bedrock** aktif secara default.
-- Glyph lebar seperti rank/prefix dinormalisasi ke tinggi maksimal 9px agar advance width lebih kecil dan preview buku tidak mudah turun baris.
-- Menyisakan baseline 1px untuk alignment rank yang lebih stabil.
-- Laporan konversi mencatat berapa glyph lebar yang dikompakkan.
+- Tidak membuat atau membutuhkan plugin tambahan.
+- Rank PNG lebar tetap memakai satu karakter Unicode ItemsAdder asli.
+- Halaman `font/glyph_XX.png` dibuat sebagai grid 16×16 slot dengan tinggi slot tetap 16 px dan lebar slot mengikuti rank.
+- Metrik `height` dan `ascent` dari font JSON Java dipakai untuk menjaga ukuran serta posisi vertikal.
+- Menghindari halaman font persegi raksasa yang sebelumnya membuat prefix turun ke baris bawah atau texture hilang di Bedrock mobile.
 
 ## Menjalankan
 
-1. Extract folder ini.
-2. Buka `index.html`, atau upload seluruh isi folder ke Netlify.
-3. Upload ZIP folder `ItemsAdder/contents` atau generated Java resource pack hasil `/iazip`.
-4. Biarkan **Compat rank Bedrock** aktif.
-5. Tekan **Scan pack**, lalu **Download bundle ZIP**.
-
-## Catatan rank
-
-Untuk rank ItemsAdder tanpa properti `symbol`, gunakan generated resource pack hasil `/iazip`. File source `contents` saja tidak menyimpan codepoint otomatis yang dipilih ItemsAdder.
-
-Rank yang sangat lebar masih dapat wrap pada buku Bedrock karena lebar halaman dan metrik font Java/Bedrock berbeda. Mode kompatibilitas mengurangi masalah ini tanpa membuang texture.
+1. Upload seluruh isi folder ini ke root repository GitHub/Netlify.
+2. Pastikan folder `vendor` ikut di-upload.
+3. Buka website lalu upload ZIP generated Java resource pack hasil `/iazip`.
+4. Tekan **Scan pack** dan **Download bundle ZIP**.
+5. Pasang `.mcpack` ke `plugins/Geyser-*/packs/` dan mapping JSON ke `plugins/Geyser-*/custom_mappings/`.
+6. Hapus cache resource pack lama di client Bedrock lalu masuk ulang.
 
 ## Output
 
 - `<pack>.mcpack` — Bedrock Resource Pack.
-- `geyser/custom_mappings/<pack>_items.json` — mapping custom item Geyser v2.
-- `conversion-report.json` — daftar aset dan hasil konversi.
+- `geyser/custom_mappings/<pack>_items.json` — mapping custom item Geyser.
+- `conversion-report.json` — laporan aset dan ukuran halaman glyph.
 - `INSTALL.txt` — petunjuk pemasangan.
+
+## Catatan
+
+Generated pack hasil `/iazip` diperlukan untuk font image yang codepoint/symbol-nya ditentukan otomatis oleh ItemsAdder. Website statis tidak dapat menyembunyikan source code secara mutlak; CSP, header Netlify, runtime terenkode, dan tanpa source map hanya mempersulit penyalinan kasual.

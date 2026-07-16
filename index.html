@@ -28,17 +28,17 @@
   <main id="top" class="shell page">
     <section class="hero">
       <div class="hero-copy">
-        <span class="eyebrow">PACK CONVERTER V2.1</span>
+        <span class="eyebrow">PACK CONVERTER V2.3</span>
         <h1>Ubah pack Java menjadi <span>Bedrock-ready.</span></h1>
         <p>Upload ZIP ItemsAdder atau generated resource pack. Converter memindai item, model, rank PNG/font glyph, sound, animasi texture, dan berkas Blockbench tanpa mengunggah file ke server.</p>
         <div class="hero-tags">
-          <span>Item 2D</span><span>Font glyph / rank PNG</span><span>Sound OGG</span><span>Java model 3D</span><span>.bbmodel statis</span>
+          <span>Item 2D</span><span>Font glyph / rank PNG</span><span>Sound OGG</span><span>Java model 3D</span><span>.bbmodel statis</span><span>Rank native tanpa plugin</span>
         </div>
       </div>
       <aside class="hero-card">
-        <span class="hero-card-label">Fix utama di v2.1</span>
-        <strong>Rank lebar sekarang dinormalisasi agar tidak mudah turun baris.</strong>
-        <p>Ukuran Java <code>height/ascent</code> kini dipakai, dengan mode kompatibilitas rank Bedrock.</p>
+        <span class="hero-card-label">Fix utama di v2.3</span>
+        <strong>Rank lebar tetap satu karakter dan sejajar, tanpa plugin tambahan.</strong>
+        <p>Generator memakai halaman glyph persegi panjang: lebar mengikuti badge, tinggi slot tetap 16 px.</p>
       </aside>
     </section>
 
@@ -65,7 +65,7 @@
         <div class="option-grid">
           <label class="option"><input id="optItems" type="checkbox" checked><span class="check"></span><span><strong>Custom items</strong><small>Texture + mapping Geyser v2</small></span></label>
           <label class="option"><input id="optFonts" type="checkbox" checked><span class="check"></span><span><strong>Rank PNG & glyph</strong><small>Java bitmap font → Bedrock glyph pages</small></span></label>
-          <label class="option featured-option"><input id="optCompactFonts" type="checkbox" checked><span class="check"></span><span><strong>Compat rank Bedrock</strong><small>Kecilkan glyph lebar ke tinggi 9px agar preview/prefix tidak wrap</small></span></label>
+          <div class="option featured-option static-option"><span class="check checked">✓</span><span><strong>Rank lebar native</strong><small>Satu Unicode asli, tanpa plugin atau placeholder baru</small></span></div>
           <label class="option"><input id="optSounds" type="checkbox" checked><span class="check"></span><span><strong>Custom sounds</strong><small>OGG + sound_definitions.json</small></span></label>
           <label class="option"><input id="optModels" type="checkbox" checked><span class="check"></span><span><strong>Model 3D dasar</strong><small>Cuboid Java model → geometry + attachable</small></span></label>
           <label class="option"><input id="optBbmodel" type="checkbox" checked><span class="check"></span><span><strong>.bbmodel statis</strong><small>Export geometry dasar dan texture embedded</small></span></label>
@@ -128,14 +128,19 @@
       </div>
     </section>
 
+    <section class="security-strip panel">
+      <div><span class="security-icon">◇</span><div><strong>Build terlindungi untuk deploy</strong><small>CSP, no-index, anti-sniff, tanpa source map, dan bundle JavaScript terkompresi.</small></div></div>
+      <p>Catatan jujur: source website statis tidak mungkin dibuat 100% tidak bisa diambil. Proteksi ini hanya mempersulit penyalinan; perlindungan penuh memerlukan backend privat.</p>
+    </section>
+
     <section class="notes-grid">
-      <article><span>01</span><h3>Rank PNG & font</h3><p>Mode Compat Rank aktif secara default dan memakai tinggi/ascent font Java. Upload generated pack bila ItemsAdder memilih karakter glyph secara otomatis. File YAML tanpa properti <code>symbol</code> tidak menyimpan kode Unicode-nya.</p></article>
+      <article><span>01</span><h3>Rank PNG & font</h3><p>Rank lebar seperti 80×16 tetap memakai karakter Unicode ItemsAdder asli. Converter membuat halaman glyph persegi panjang dengan tinggi slot 16 px agar prefix tidak turun ke bawah dan badge tidak dipipihkan.</p></article>
       <article><span>02</span><h3>Model kompleks</h3><p>Model kubus dasar dapat dibuat menjadi attachable. Animasi, banyak texture, shader, item display, dan model plugin lain tetap dapat membutuhkan penyesuaian.</p></article>
       <article><span>03</span><h3>Sound</h3><p>File OGG disalin dan event Java diterjemahkan. Gunakan OGG Vorbis; codec yang tidak didukung Bedrock akan ditandai untuk dites manual.</p></article>
     </section>
   </main>
 
-  <footer class="shell footer"><span>Azy Pack Bridge v2.1</span><span>Semua pemrosesan berjalan di perangkat kamu.</span></footer>
+  <footer class="shell footer"><span>Azy Pack Bridge v2.3</span><span>Semua pemrosesan berjalan di perangkat kamu.</span></footer>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
   <script src="vendor/jszip.min.js"></script>
