@@ -1,35 +1,30 @@
-# Azy Icon Bridge v2.4
+# Azy Icon Bridge v2.5
 
-Website statis khusus untuk mengonversi **rank PNG, font image/glyph, emoji, dan icon item 2D** dari ItemsAdder Java menjadi Bedrock Resource Pack + mapping Geyser.
+Website statis untuk mengonversi rank PNG, prefix, emoji, font glyph, dan icon item 2D dari resource pack ItemsAdder Java menjadi Bedrock Resource Pack + mapping Geyser.
 
-## Fix utama v2.4
+## Fix utama v2.5
 
-- Menghapus output glyph persegi panjang yang membuat rank terpotong dan melar.
-- `font/glyph_XX.png` selalu memakai halaman persegi dengan grid 16×16 slot persegi.
-- Ukuran halaman dibatasi ke 256×256, 512×512, atau 1024×1024.
-- Rank 80×16 dengan height 13 diubah secara proporsional menjadi sekitar 64×13.
-- Baseline ditempatkan pada area 16 px di bagian atas slot agar rank tidak turun beberapa baris.
-- Fokus converter dipersempit ke icon/rank agar hasil lebih stabil.
-
-## Bukan target v2.4
-
-Sound, model 3D, `.bbmodel`, furniture, shader, entity mechanics, dan animasi kompleks tidak dikonversi. Gunakan workflow Bedrock khusus untuk aset tersebut.
+- Rasio rank dipertahankan tepat. Contoh `80×16` dengan Java `height: 13` menjadi `65×13` (tetap 5:1).
+- Downscale memakai filter kualitas tinggi agar tulisan rank tidak kasar/burik.
+- Rank lebar memakai baseline median pack agar satu nilai `ascent/y_position` yang berbeda tidak membuat prefix naik atau turun sendiri.
+- Provider font diproses deterministik; generated Java font lebih diprioritaskan daripada definisi YAML yang sama.
+- Semua opsi tampilan sekarang berupa checkbox sungguhan dan dapat dicentang atau dilepas.
+- Glyph page tetap persegi dan dibagi menjadi grid 16×16, tetapi ukuran sel tidak lagi dipaksa ke 16/32/64.
 
 ## Menjalankan
 
-1. Upload seluruh isi folder ini ke root repository GitHub/Netlify.
-2. Pastikan folder `vendor` ikut di-upload.
-3. Buka website dan upload generated resource pack hasil `/iazip`.
-4. Tekan **Scan icon pack** lalu **Download icon bundle ZIP**.
-5. Salin `.mcpack` ke folder `Geyser/packs/`.
-6. Salin mapping JSON ke `Geyser/custom_mappings/`.
-7. Restart Geyser dan hapus cache resource pack lama di Minecraft Bedrock.
+1. Upload seluruh isi folder ini ke Netlify/GitHub Pages.
+2. Pastikan folder `vendor/` ikut di-upload.
+3. Upload generated Java resource pack hasil `/iazip` ke website.
+4. Untuk rank, biarkan opsi **Pertahankan rasio**, **Filter kualitas tinggi**, **Ratakan posisi rank**, dan **Pertahankan urutan provider** tetap aktif.
+5. Download bundle, pasang `.mcpack` ke `Geyser/packs/`, dan mapping ke `Geyser/custom_mappings/`.
+6. Hapus cache resource pack Bedrock lama sebelum mengetes ulang.
 
-## Output
+## Fokus converter
 
-- `<pack>.mcpack`
-- `geyser/custom_mappings/<pack>_items.json`
-- `conversion-report.json`
-- `INSTALL.txt`
+- Rank/prefix PNG
+- Emoji dan icon chat
+- Bitmap font glyph
+- Icon custom item 2D
 
-Generated pack `/iazip` diperlukan ketika ItemsAdder menentukan karakter Unicode secara otomatis.
+Sound, model 3D, BBModel, furniture, shader, dan animasi kompleks sengaja tidak dipaksakan pada mode ini.

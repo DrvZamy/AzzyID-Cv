@@ -62,3 +62,11 @@ button,input{font:inherit}button{cursor:pointer}code{font:500 .92em/1.4 ui-monos
 .recommendation strong{display:block;font-size:14px}.recommendation p{margin:4px 0 0;color:var(--muted);font-size:11px;line-height:1.55}
 .icon-options .option{min-height:70px}.icon-notes article:first-child{border-color:rgba(255,113,141,.2)}
 @media(max-width:680px){.recommendation{padding:15px}.recommendation p{font-size:10px}.icon-hero{padding-bottom:26px}}
+
+/* v2.5 quality and alignment controls */
+.option-help{margin:-4px 2px 15px;color:var(--muted);font-size:10px;line-height:1.55}
+.option-help strong{color:var(--text)}
+.option input:focus-visible+.check{outline:3px solid rgba(124,92,255,.22);outline-offset:2px}
+.option:has(input:not(:checked)){opacity:.72}
+.option:has(input:not(:checked)):hover{opacity:1}
+@media(max-width:680px){.option-help{font-size:9.5px;margin-top:-2px}}

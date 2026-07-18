@@ -28,7 +28,7 @@
   <main id="top" class="shell page">
     <section class="hero icon-hero">
       <div class="hero-copy">
-        <span class="eyebrow">ICON CONVERTER V2.4</span>
+        <span class="eyebrow">ICON CONVERTER V2.5</span>
         <h1>Rank dan icon tetap <span>rapi di Bedrock.</span></h1>
         <p>Versi ini sengaja difokuskan untuk rank PNG, emoji, font glyph, dan icon item 2D. Tidak lagi memaksakan sound atau model 3D yang hasilnya tidak konsisten.</p>
         <div class="hero-tags">
@@ -36,9 +36,9 @@
         </div>
       </div>
       <aside class="hero-card hero-card-fix">
-        <span class="hero-card-label">Fix v2.4</span>
-        <strong>Glyph page kembali persegi. Texture tidak dipotong atau dilarkan.</strong>
-        <p>Grid selalu 16×16 dengan halaman 256, 512, atau 1024 px. Rank 80×16 diperkecil proporsional menjadi sekitar 64×13.</p>
+        <span class="hero-card-label">Fix v2.5</span>
+        <strong>Rasio tetap presisi, kualitas lebih bersih, dan baseline rank diratakan.</strong>
+        <p>Grid tetap 16×16 dan persegi, tetapi ukuran sel kini mengikuti glyph. Rank 80×16 pada height 13 menjadi tepat 65×13 dengan filter high-quality.</p>
       </aside>
     </section>
 
@@ -70,9 +70,12 @@
         <div class="option-grid icon-options">
           <label class="option"><input id="optFonts" type="checkbox" checked><span class="check"></span><span><strong>Rank PNG & font glyph</strong><small>Rank, prefix, emoji, dan icon teks</small></span></label>
           <label class="option"><input id="optItems" type="checkbox" checked><span class="check"></span><span><strong>Icon custom item 2D</strong><small>Texture item + mapping Geyser v2</small></span></label>
-          <div class="option featured-option static-option"><span class="check checked">✓</span><span><strong>Rasio gambar dipertahankan</strong><small>Tidak stretch, tidak gepeng, tidak memanjang</small></span></div>
-          <div class="option static-option"><span class="check checked">✓</span><span><strong>Square glyph grid</strong><small>Slot persegi power-of-two untuk Bedrock</small></span></div>
+          <label class="option featured-option"><input id="optPreserveRatio" type="checkbox" checked><span class="check"></span><span><strong>Pertahankan rasio asli</strong><small>80×16 menjadi 65×13, tetap tepat 5:1</small></span></label>
+          <label class="option featured-option"><input id="optHighQuality" type="checkbox" checked><span class="check"></span><span><strong>Filter kualitas tinggi</strong><small>Downscale lebih halus dan tidak burik</small></span></label>
+          <label class="option"><input id="optNormalizeBaseline" type="checkbox" checked><span class="check"></span><span><strong>Ratakan posisi rank</strong><small>Samakan baseline prefix yang naik/turun</small></span></label>
+          <label class="option"><input id="optProviderOrder" type="checkbox" checked><span class="check"></span><span><strong>Pertahankan urutan provider</strong><small>Generated Java font menjadi sumber utama</small></span></label>
         </div>
+        <p class="option-help"><strong>Rekomendasi:</strong> biarkan empat opsi perbaikan tetap aktif saat convert rank. Kamu tetap bisa mematikannya untuk perbandingan hasil.</p>
 
         <!-- Dipertahankan tersembunyi agar runtime lama tetap kompatibel. -->
         <input id="optSounds" type="checkbox" hidden>
@@ -136,9 +139,9 @@
     </section>
 
     <section class="notes-grid icon-notes">
-      <article><span>01</span><h3>Kenapa v2.3 rusak?</h3><p>Halaman glyph dibuat persegi panjang. Bedrock membacanya sebagai grid kotak sehingga setiap rank terpotong menjadi bagian-bagian dan tampak melar.</p></article>
-      <article><span>02</span><h3>Ukuran rank</h3><p>Nilai height dan ascent dari font Java dipakai. Rank lebar dibatasi 64 px sambil mempertahankan aspek asli agar mendekati ukuran Java.</p></article>
-      <article><span>03</span><h3>Batas converter</h3><p>Website ini tidak mengubah model 3D, sound, furniture, atau BBModel. Fokus sempit membuat hasil icon jauh lebih stabil.</p></article>
+      <article><span>01</span><h3>Kenapa v2.3 rusak?</h3><p>v2.4 membatasi rank ke 64 px dan memakai nearest-neighbor, sehingga rasio 80:16 sedikit berubah dan hasil terlihat kasar.</p></article>
+      <article><span>02</span><h3>Ukuran rank</h3><p>Nilai height Java tetap dipakai. Rasio dihitung tanpa cap 64 px, filter high-quality aktif, dan baseline rank lebar dinormalisasi dengan median pack.</p></article>
+      <article><span>03</span><h3>Batas converter</h3><p>Semua opsi kini berupa checkbox sungguhan dan bisa dicentang atau dilepas. Grid persegi tetap diterapkan otomatis karena wajib agar glyph Bedrock tidak melar.</p></article>
     </section>
 
     <section class="security-strip panel">
@@ -147,7 +150,7 @@
     </section>
   </main>
 
-  <footer class="shell footer"><span>Azy Icon Bridge v2.4</span><span>Fokus: rank, glyph, emoji, dan icon item 2D.</span></footer>
+  <footer class="shell footer"><span>Azy Icon Bridge v2.5</span><span>Fokus: rank, glyph, emoji, dan icon item 2D.</span></footer>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
   <script src="vendor/jszip.min.js"></script>
