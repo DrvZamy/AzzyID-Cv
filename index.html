@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#090d18">
-  <title>Azy Pack Bridge — ItemsAdder ke Bedrock</title>
-  <meta name="description" content="Converter resource pack ItemsAdder Java ke Bedrock + Geyser langsung di browser.">
+  <title>Azy Icon Bridge — Rank & Icon ItemsAdder ke Bedrock</title>
+  <meta name="description" content="Converter khusus rank PNG, font glyph, emoji, dan icon item 2D ItemsAdder Java ke Bedrock + Geyser langsung di browser.">
   <link rel="preconnect" href="https://cdn.jsdelivr.net">
   <link rel="stylesheet" href="style.css">
 </head>
@@ -15,77 +15,85 @@
   <div class="orb orb-b" aria-hidden="true"></div>
 
   <header class="topbar shell">
-    <a class="brand" href="#top" aria-label="Azy Pack Bridge">
+    <a class="brand" href="#top" aria-label="Azy Icon Bridge">
       <span class="brand-logo">A</span>
-      <span><strong>Azy Pack Bridge</strong><small>ItemsAdder → Bedrock + Geyser</small></span>
+      <span><strong>Azy Icon Bridge</strong><small>Rank & icon Java → Bedrock</small></span>
     </a>
     <div class="top-actions">
-      <span class="engine-badge"><i></i> Local browser engine</span>
+      <span class="engine-badge"><i></i> Diproses lokal di browser</span>
       <button id="themeBtn" class="icon-btn" type="button" aria-label="Ganti tema">☾</button>
     </div>
   </header>
 
   <main id="top" class="shell page">
-    <section class="hero">
+    <section class="hero icon-hero">
       <div class="hero-copy">
-        <span class="eyebrow">PACK CONVERTER V2.3</span>
-        <h1>Ubah pack Java menjadi <span>Bedrock-ready.</span></h1>
-        <p>Upload ZIP ItemsAdder atau generated resource pack. Converter memindai item, model, rank PNG/font glyph, sound, animasi texture, dan berkas Blockbench tanpa mengunggah file ke server.</p>
+        <span class="eyebrow">ICON CONVERTER V2.4</span>
+        <h1>Rank dan icon tetap <span>rapi di Bedrock.</span></h1>
+        <p>Versi ini sengaja difokuskan untuk rank PNG, emoji, font glyph, dan icon item 2D. Tidak lagi memaksakan sound atau model 3D yang hasilnya tidak konsisten.</p>
         <div class="hero-tags">
-          <span>Item 2D</span><span>Font glyph / rank PNG</span><span>Sound OGG</span><span>Java model 3D</span><span>.bbmodel statis</span><span>Rank native tanpa plugin</span>
+          <span>Rank PNG</span><span>Emoji & icon chat</span><span>Font glyph</span><span>Item icon 2D</span><span>Geyser mapping v2</span>
         </div>
       </div>
-      <aside class="hero-card">
-        <span class="hero-card-label">Fix utama di v2.3</span>
-        <strong>Rank lebar tetap satu karakter dan sejajar, tanpa plugin tambahan.</strong>
-        <p>Generator memakai halaman glyph persegi panjang: lebar mengikuti badge, tinggi slot tetap 16 px.</p>
+      <aside class="hero-card hero-card-fix">
+        <span class="hero-card-label">Fix v2.4</span>
+        <strong>Glyph page kembali persegi. Texture tidak dipotong atau dilarkan.</strong>
+        <p>Grid selalu 16×16 dengan halaman 256, 512, atau 1024 px. Rank 80×16 diperkecil proporsional menjadi sekitar 64×13.</p>
       </aside>
+    </section>
+
+    <section class="recommendation panel">
+      <span class="recommendation-icon">✓</span>
+      <div><strong>Direkomendasikan untuk icon saja</strong><p>Gunakan website ini untuk rank, prefix, emoji, logo kecil, dan icon item 2D. Untuk model 3D, furniture, BBModel, sound, shader, dan animasi kompleks gunakan converter atau konfigurasi khusus Bedrock.</p></div>
     </section>
 
     <section class="workspace">
       <div class="panel upload-panel">
         <div class="panel-title-row">
-          <div><span class="step">01</span><div><h2>Upload & konfigurasi</h2><p>Pilih ZIP pack yang ingin dikonversi.</p></div></div>
+          <div><span class="step">01</span><div><h2>Upload pack</h2><p>Pilih ZIP generated pack atau folder ItemsAdder contents.</p></div></div>
           <span id="fileBadge" class="badge muted-badge">Belum ada file</span>
         </div>
 
         <label id="dropzone" class="dropzone" for="fileInput">
           <input id="fileInput" type="file" accept=".zip,application/zip" hidden>
           <span class="drop-icon">⇧</span>
-          <strong>Taruh ZIP ItemsAdder di sini</strong>
-          <span>atau sentuh untuk memilih file</span>
-          <small>Mendukung <code>ItemsAdder/contents</code> dan hasil <code>/iazip</code>.</small>
+          <strong>Upload ZIP ItemsAdder</strong>
+          <span>sentuh area ini untuk memilih file</span>
+          <small>Paling akurat: generated resource pack hasil <code>/iazip</code>.</small>
         </label>
 
         <div class="form-grid">
-          <label><span>Nama pack</span><input id="packName" value="Azy Converted Pack" maxlength="80"></label>
-          <label><span>Fallback namespace</span><input id="fallbackNamespace" value="azypack" maxlength="32" spellcheck="false"></label>
+          <label><span>Nama pack</span><input id="packName" value="MineFiveID Icons" maxlength="80"></label>
+          <label><span>Fallback namespace</span><input id="fallbackNamespace" value="minefiveid" maxlength="32" spellcheck="false"></label>
         </div>
 
-        <div class="option-grid">
-          <label class="option"><input id="optItems" type="checkbox" checked><span class="check"></span><span><strong>Custom items</strong><small>Texture + mapping Geyser v2</small></span></label>
-          <label class="option"><input id="optFonts" type="checkbox" checked><span class="check"></span><span><strong>Rank PNG & glyph</strong><small>Java bitmap font → Bedrock glyph pages</small></span></label>
-          <div class="option featured-option static-option"><span class="check checked">✓</span><span><strong>Rank lebar native</strong><small>Satu Unicode asli, tanpa plugin atau placeholder baru</small></span></div>
-          <label class="option"><input id="optSounds" type="checkbox" checked><span class="check"></span><span><strong>Custom sounds</strong><small>OGG + sound_definitions.json</small></span></label>
-          <label class="option"><input id="optModels" type="checkbox" checked><span class="check"></span><span><strong>Model 3D dasar</strong><small>Cuboid Java model → geometry + attachable</small></span></label>
-          <label class="option"><input id="optBbmodel" type="checkbox" checked><span class="check"></span><span><strong>.bbmodel statis</strong><small>Export geometry dasar dan texture embedded</small></span></label>
-          <label class="option"><input id="optFlipbooks" type="checkbox" checked><span class="check"></span><span><strong>Animated texture</strong><small>.png.mcmeta → flipbook_textures.json</small></span></label>
+        <div class="option-grid icon-options">
+          <label class="option"><input id="optFonts" type="checkbox" checked><span class="check"></span><span><strong>Rank PNG & font glyph</strong><small>Rank, prefix, emoji, dan icon teks</small></span></label>
+          <label class="option"><input id="optItems" type="checkbox" checked><span class="check"></span><span><strong>Icon custom item 2D</strong><small>Texture item + mapping Geyser v2</small></span></label>
+          <div class="option featured-option static-option"><span class="check checked">✓</span><span><strong>Rasio gambar dipertahankan</strong><small>Tidak stretch, tidak gepeng, tidak memanjang</small></span></div>
+          <div class="option static-option"><span class="check checked">✓</span><span><strong>Square glyph grid</strong><small>Slot persegi power-of-two untuk Bedrock</small></span></div>
         </div>
 
-        <button id="scanBtn" class="primary-btn" type="button" disabled><span>Scan pack</span><b>→</b></button>
+        <!-- Dipertahankan tersembunyi agar runtime lama tetap kompatibel. -->
+        <input id="optSounds" type="checkbox" hidden>
+        <input id="optModels" type="checkbox" hidden>
+        <input id="optBbmodel" type="checkbox" hidden>
+        <input id="optFlipbooks" type="checkbox" hidden>
+
+        <button id="scanBtn" class="primary-btn" type="button" disabled><span>Scan icon pack</span><b>→</b></button>
       </div>
 
       <div class="panel overview-panel">
         <div class="panel-title-row compact-row">
-          <div><span class="step">02</span><div><h2>Analisis pack</h2><p id="analysisState">Menunggu file</p></div></div>
+          <div><span class="step">02</span><div><h2>Analisis icon</h2><p id="analysisState">Menunggu file</p></div></div>
           <span id="healthBadge" class="badge muted-badge">Idle</span>
         </div>
 
         <div class="stats-grid">
-          <article><span>Items</span><strong id="statItems">0</strong><small>mapping item</small></article>
+          <article><span>Item icons</span><strong id="statItems">0</strong><small>texture 2D</small></article>
           <article><span>Glyphs</span><strong id="statGlyphs">0</strong><small>rank / emoji</small></article>
-          <article><span>Sounds</span><strong id="statSounds">0</strong><small>event audio</small></article>
-          <article><span>Models</span><strong id="statModels">0</strong><small>3D + bbmodel</small></article>
+          <article><span>Font sources</span><strong id="statSounds">0</strong><small>provider terdeteksi</small></article>
+          <article><span>Gagal</span><strong id="statModels">0</strong><small>asset tidak terbaca</small></article>
         </div>
 
         <div class="progress-block">
@@ -95,30 +103,29 @@
 
         <div class="quality-list">
           <div><span class="quality-dot ok"></span><span><strong id="countReady">0</strong> siap diekspor</span></div>
-          <div><span class="quality-dot warn"></span><span><strong id="countReview">0</strong> perlu dicek</span></div>
+          <div><span class="quality-dot warn"></span><span><strong id="countReview">0</strong> perlu dites</span></div>
           <div><span class="quality-dot bad"></span><span><strong id="countUnsupported">0</strong> tidak bisa dipetakan</span></div>
         </div>
 
         <button id="downloadBtn" class="download-btn" type="button" disabled>
-          <span><strong>Download bundle ZIP</strong><small>.mcpack + mapping + report</small></span><b>↓</b>
+          <span><strong>Download icon bundle ZIP</strong><small>.mcpack + mapping + laporan</small></span><b>↓</b>
         </button>
       </div>
     </section>
 
     <section id="resultsPanel" class="panel results-panel hidden">
       <div class="results-head">
-        <div><span class="step">03</span><div><h2>Hasil pemindaian</h2><p>Klik tab untuk melihat aset yang terdeteksi dan catatan konversi.</p></div></div>
+        <div><span class="step">03</span><div><h2>Hasil pemindaian</h2><p>Periksa icon dan glyph yang berhasil dikenali sebelum download.</p></div></div>
       </div>
 
       <div class="toolbar">
         <div class="tabs" role="tablist">
-          <button class="tab active" data-tab="items" type="button">Items <span id="tabCountItems">0</span></button>
-          <button class="tab" data-tab="fonts" type="button">Glyphs <span id="tabCountFonts">0</span></button>
-          <button class="tab" data-tab="sounds" type="button">Sounds <span id="tabCountSounds">0</span></button>
-          <button class="tab" data-tab="models" type="button">Models <span id="tabCountModels">0</span></button>
+          <button class="tab active" data-tab="items" type="button">Item icons <span id="tabCountItems">0</span></button>
+          <button class="tab" data-tab="fonts" type="button">Rank & glyph <span id="tabCountFonts">0</span></button>
         </div>
-        <input id="searchInput" type="search" placeholder="Cari aset..." autocomplete="off">
+        <input id="searchInput" type="search" placeholder="Cari icon atau rank..." autocomplete="off">
       </div>
+      <span id="tabCountSounds" hidden>0</span><span id="tabCountModels" hidden>0</span>
 
       <div class="table-wrap">
         <table>
@@ -128,19 +135,19 @@
       </div>
     </section>
 
-    <section class="security-strip panel">
-      <div><span class="security-icon">◇</span><div><strong>Build terlindungi untuk deploy</strong><small>CSP, no-index, anti-sniff, tanpa source map, dan bundle JavaScript terkompresi.</small></div></div>
-      <p>Catatan jujur: source website statis tidak mungkin dibuat 100% tidak bisa diambil. Proteksi ini hanya mempersulit penyalinan; perlindungan penuh memerlukan backend privat.</p>
+    <section class="notes-grid icon-notes">
+      <article><span>01</span><h3>Kenapa v2.3 rusak?</h3><p>Halaman glyph dibuat persegi panjang. Bedrock membacanya sebagai grid kotak sehingga setiap rank terpotong menjadi bagian-bagian dan tampak melar.</p></article>
+      <article><span>02</span><h3>Ukuran rank</h3><p>Nilai height dan ascent dari font Java dipakai. Rank lebar dibatasi 64 px sambil mempertahankan aspek asli agar mendekati ukuran Java.</p></article>
+      <article><span>03</span><h3>Batas converter</h3><p>Website ini tidak mengubah model 3D, sound, furniture, atau BBModel. Fokus sempit membuat hasil icon jauh lebih stabil.</p></article>
     </section>
 
-    <section class="notes-grid">
-      <article><span>01</span><h3>Rank PNG & font</h3><p>Rank lebar seperti 80×16 tetap memakai karakter Unicode ItemsAdder asli. Converter membuat halaman glyph persegi panjang dengan tinggi slot 16 px agar prefix tidak turun ke bawah dan badge tidak dipipihkan.</p></article>
-      <article><span>02</span><h3>Model kompleks</h3><p>Model kubus dasar dapat dibuat menjadi attachable. Animasi, banyak texture, shader, item display, dan model plugin lain tetap dapat membutuhkan penyesuaian.</p></article>
-      <article><span>03</span><h3>Sound</h3><p>File OGG disalin dan event Java diterjemahkan. Gunakan OGG Vorbis; codec yang tidak didukung Bedrock akan ditandai untuk dites manual.</p></article>
+    <section class="security-strip panel">
+      <div><span class="security-icon">◇</span><div><strong>File tidak diunggah ke server</strong><small>ZIP diproses langsung pada browser perangkat kamu.</small></div></div>
+      <p>Website statis tidak dapat menyembunyikan source code secara mutlak. Runtime tetap dikemas tanpa source map dan dilindungi header CSP untuk mempersulit penyalinan kasual.</p>
     </section>
   </main>
 
-  <footer class="shell footer"><span>Azy Pack Bridge v2.3</span><span>Semua pemrosesan berjalan di perangkat kamu.</span></footer>
+  <footer class="shell footer"><span>Azy Icon Bridge v2.4</span><span>Fokus: rank, glyph, emoji, dan icon item 2D.</span></footer>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
   <script src="vendor/jszip.min.js"></script>
